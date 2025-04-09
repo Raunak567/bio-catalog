@@ -277,12 +277,12 @@ function MintPage() {
                                     <div className="form-group" >
                                         <div className="d-flex justify-content-center">
                                             <button type="button"
-                                                className="minus btn btn-info rounded-circle"
+                                                className="minus btn btn-info"
                                                 disabled={mintAmount === 1}
                                                 onClick={() => { setMintAmount(mintAmount - 1) }}>-</button>
                                             <input type="number" className="mintnum text-center" readOnly value={mintAmount} />
                                             <button type="button"
-                                                className="plus btn btn-info rounded-circle"
+                                                className="plus btn btn-info"
                                                 disabled={mintAmount === info.maxMintAmountPerTx}
                                                 onClick={() => { setMintAmount(mintAmount + 1) }}>+</button>
                                         </div>
@@ -330,5 +330,4 @@ function MintPage() {
         </section>
     )
 }
-
 export default MintPage;

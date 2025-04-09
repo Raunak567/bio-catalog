@@ -39,15 +39,25 @@ body {
 .nav-link_ref {
     text-decoration: none;
     display: block;
-    padding: 10px;
-    color: #fff;
-    margin-bottom: 5px;
+    padding: 10px 20px;
+    color: #ffffff;
+    background-color: orange;
+    border-radius: 10px;
+    margin-right: 10px;
+    font-weight: 500;
+    border: none;
+    transition: background-color 0.3s ease;
 }
 
 .nav-link_ref:hover {
+    background-color: #4c4c4c; /* Slightly darker on hover */
+}
+
+
+/* .nav-link_ref:hover {
     text-decoration: none;
     opacity: 0.9;
-}
+} */
 
 .is-active {
     display: none;
@@ -66,18 +76,25 @@ body {
     position: absolute;
     left: 50%;
     bottom: 60px;
-    -webkit-transform: translate(-50%);
-    transform: translate(-50%);
+    transform: translateX(-50%);
     width: 100%;
+    text-align: center;
 }
 
 .caption-inner {
-    display: flex;
-    align-items: center;
+    display: inline-flex;
     justify-content: center;
-    grid-gap: 20px;
-    gap: 20px;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
 }
+
+.caption p {
+    color: #fff;
+    font-size: 20px;
+    margin-top: 15px;
+}
+
 
 .about {
     padding: 30px 50px 50px 40px;
@@ -231,7 +248,7 @@ body {
     margin-right: .5em;
 }
 
-.roadmap-imgs {
+/* .roadmap-imgs {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -240,14 +257,14 @@ body {
 
 .roadmap-img {
     padding-bottom: 20px;
-}
+} */
 
 .sliderimg {
     width: 200px;
     height: 200px;
 }
 
-.footer {
+/* .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -256,7 +273,7 @@ body {
 
 .footer p {
     font-size: 0.938rem;
-}
+} */
 
 
 .claim {
@@ -406,76 +423,6 @@ body {
     padding-left: 10px;
 }
 
-/* FAQ */
-
-.faq {
-    align-items: center;
-    justify-content: center;
-    margin: 0px auto;
-    margin-top: 40px;
-}
-
-.faqhead {
-    font-size: 36px;
-    -webkit-text-stroke-width: 3px;
-    -webkit-text-stroke-color: #000;
-    text-transform: uppercase;
-    margin-top: 12px;
-    margin-left: 12px;
-}
-
-.faq-questions {
-    width: 60%;
-    padding-top: 20px;
-    padding-bottom: 30px;
-    margin-left: 20%;
-}
-
-summary {
-    font-size: 20px;
-    background-color: rgba(255, 255, 255, 0);
-    color: #000;
-    padding: 1rem;
-    margin-bottom: 0px;
-    outline: none;
-    border-radius: 0.25rem;
-    text-align: left;
-    cursor: pointer;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.faq__content {
-    font-family: 'Gilroy-Medium', sans-serif;
-    margin-left: 15px;
-    max-width: 400px;
-}
-
-details>summary::after {
-    position: absolute;
-    content: "+";
-    right: 20px;
-}
-
-details[open]>summary::after {
-    position: absolute;
-    content: "-";
-    right: 20px;
-}
-
-details>summary::-webkit-details-marker {
-    display: none;
-}
-
-details>summary {
-    list-style: none;
-}
-
-details>summary::-webkit-details-marker {
-    display: none;
-}
-
-
 @media (max-width: 767px) {
 
     .header {
@@ -541,23 +488,6 @@ details>summary::-webkit-details-marker {
         font-size: 12px;
     }
 
-    .roadmap {
-        display: flex;
-        flex-direction: column-reverse;
-    }
-
-    .roadmap-container {
-        width: 100%;
-    }
-
-    .roadmap-imgs {
-        flex-direction: row;
-        padding-left: 0px;
-    }
-
-    .roadmap-img {
-        padding: 10px;
-    }
 
     .sliderimg {
         width: 160px;

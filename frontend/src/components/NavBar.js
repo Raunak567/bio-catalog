@@ -30,7 +30,7 @@ function NavBar() {
                 <div className='nav-links_div'>
                     <a href="/" className="nav-link_ref">Home</a>
                     <a href="/mint-page" className="nav-link_ref">Mint</a>
-                    <a href="/#about" className="nav-link_ref">About</a>
+                    <a href="/#Footer" className="nav-link_ref">Generate token</a>
                     <Connect />
                 </div>
             </nav>

@@ -1,39 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { fetchSpecies } from '../services/api';
 
 export default function SpeciesCatalog() {
   const [loading, setLoading] = useState(true);
   const [species, setSpecies] = useState([]);
+  const [query, setQuery] = useState('cat'); // default search term
 
   useEffect(() => {
-    // Simulated loading delay and dummy data
-    setTimeout(() => {
-      setSpecies([1, 2, 3, 4, 5, 6, 7, 8]);
+    const getSpecies = async () => {
+      setLoading(true);
+      const results = await fetchSpecies(query, 8);
+      setSpecies(results);
       setLoading(false);
-    }, 1000);
-  }, []);
+    };
+
+    getSpecies();
+  }, [query]);
 
   return (
     <section id="species" className="container mx-auto px-4 py-8 mb-16">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-2xl font-semibold text-gray-800">Species Catalog</h3>
         <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <span className="text-sm text-gray-600 mr-2">Items per page:</span>
-            <select id="items-per-page" className="px-2 py-1 border rounded-lg">
-              <option value="12">12</option>
-              <option value="24">24</option>
-              <option value="48">48</option>
-            </select>
-          </div>
-          <div className="flex space-x-2">
-            <button className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-100" disabled>
-              <i className="fas fa-chevron-left"></i>
-            </button>
-            <span className="px-4 py-2">Page 1 of 1</span>
-            <button className="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-100">
-              <i className="fas fa-chevron-right"></i>
-            </button>
-          </div>
+          <input
+            type="text"
+            placeholder="Search species..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="px-4 py-2 border rounded-lg"
+          />
         </div>
       </div>
 
@@ -48,33 +43,39 @@ export default function SpeciesCatalog() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {species.map((s, index) => (
             <div
-              key={index}
+              key={s.key || index}
               className="species-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 cursor-pointer hover:translate-y-[-5px] hover:shadow-lg"
             >
               <div className="relative">
                 <img
                   className="w-full h-48 object-cover"
-                  src={`https://source.unsplash.com/random/400x300/?animal,${index}`}
-                  alt="Species"
+                  src={`https://source.unsplash.com/400x300/?${encodeURIComponent(s.canonicalName || 'animal')}`}
+                  alt={s.canonicalName || 'Species'}
                 />
                 <div className="absolute top-4 right-4 bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                  DD
+                  {s.taxonomicStatus || 'DD'}
                 </div>
               </div>
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-lg font-bold text-gray-800">Sample Species {index + 1}</h3>
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">Kingdom</span>
+                  <h3 className="text-lg font-bold text-gray-800">
+                    {s.canonicalName || `Species ${index + 1}`}
+                  </h3>
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                    {s.kingdom || 'Unknown'}
+                  </span>
                 </div>
-                <p className="text-gray-600 text-sm italic mb-3">Scientific Name</p>
+                <p className="text-gray-600 text-sm italic mb-3">
+                  {s.scientificName || 'N/A'}
+                </p>
                 <div className="flex justify-between text-xs">
                   <div>
-                    <span className="text-gray-500">Habitat:</span>
-                    <span className="ml-1 font-medium">Forest</span>
+                    <span className="text-gray-500">Phylum:</span>
+                    <span className="ml-1 font-medium">{s.phylum || 'Unknown'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-500">Region:</span>
-                    <span className="ml-1 font-medium">Asia</span>
+                    <span className="text-gray-500">Class:</span>
+                    <span className="ml-1 font-medium">{s.class || 'Unknown'}</span>
                   </div>
                 </div>
               </div>

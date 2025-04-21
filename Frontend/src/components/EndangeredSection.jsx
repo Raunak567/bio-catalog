@@ -53,7 +53,7 @@ export default function EndangeredSection() {
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer">
             <div className="relative">
-              <img
+            <img
                 className="w-full h-32 object-cover"
                 src={`https://source.unsplash.com/random/400x300/?endangered,animal,${i}`}
                 alt={`Endangered Species ${i}`}

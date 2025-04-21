@@ -4,13 +4,37 @@ import { fetchSpecies } from '../services/api';
 export default function SpeciesCatalog() {
   const [loading, setLoading] = useState(true);
   const [species, setSpecies] = useState([]);
-  const [query, setQuery] = useState('cat'); // default search term
+  const [query, setQuery] = useState('cat');
 
   useEffect(() => {
     const getSpecies = async () => {
       setLoading(true);
       const results = await fetchSpecies(query, 8);
-      setSpecies(results);
+
+      // Try to fetch occurrence image if original image is missing
+      const enrichedResults = await Promise.all(
+        results.map(async (s) => {
+          if (s.images && s.images.length > 0) {
+            return s;
+          } else {
+            const encodedName = encodeURIComponent(s.scientificName || s.canonicalName || '');
+            try {
+              const res = await fetch(
+                `https://api.gbif.org/v1/occurrence/search?mediaType=StillImage&scientificName=${encodedName}&limit=1`
+              );
+              const data = await res.json();
+              if (data.results?.[0]?.media?.[0]?.identifier) {
+                s.fallbackImage = data.results[0].media[0].identifier;
+              }
+            } catch (err) {
+              console.error('Failed to fetch fallback image', err);
+            }
+            return s;
+          }
+        })
+      );
+
+      setSpecies(enrichedResults);
       setLoading(false);
     };
 
@@ -41,46 +65,57 @@ export default function SpeciesCatalog() {
         </div>
       ) : species.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {species.map((s, index) => (
-            <div
-              key={s.key || index}
-              className="species-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 cursor-pointer hover:translate-y-[-5px] hover:shadow-lg"
-            >
-              <div className="relative">
-                <img
-                  className="w-full h-48 object-cover"
-                  src={`https://source.unsplash.com/400x300/?${encodeURIComponent(s.canonicalName || 'animal')}`}
-                  alt={s.canonicalName || 'Species'}
-                />
-                <div className="absolute top-4 right-4 bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                  {s.taxonomicStatus || 'DD'}
-                </div>
-              </div>
-              <div className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-lg font-bold text-gray-800">
-                    {s.canonicalName || `Species ${index + 1}`}
-                  </h3>
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                    {s.kingdom || 'Unknown'}
-                  </span>
-                </div>
-                <p className="text-gray-600 text-sm italic mb-3">
-                  {s.scientificName || 'N/A'}
-                </p>
-                <div className="flex justify-between text-xs">
-                  <div>
-                    <span className="text-gray-500">Phylum:</span>
-                    <span className="ml-1 font-medium">{s.phylum || 'Unknown'}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-500">Class:</span>
-                    <span className="ml-1 font-medium">{s.class || 'Unknown'}</span>
+          {species.map((s, index) => {
+            const imageUrl =
+              s.images?.[0]?.url ||
+              s.fallbackImage ||
+              '/images/species-fallback.jpg';
+
+            return (
+              <div
+                key={s.key || index}
+                className="species-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300 cursor-pointer hover:translate-y-[-5px] hover:shadow-lg"
+              >
+                <div className="relative">
+                  <img
+                    className="w-full h-48 object-cover"
+                    src={imageUrl}
+                    alt={s.canonicalName || 'Species'}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/species-fallback.jpg';
+                    }}
+                  />
+                  <div className="absolute top-4 right-4 bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                    {s.taxonomicStatus || 'DD'}
                   </div>
                 </div>
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-bold text-gray-800">
+                      {s.scientificName || `Species ${index + 1}`}
+                    </h3>
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                      {s.kingdom || 'Unknown'}
+                    </span>
+                  </div>
+                  <p className="text-gray-600 text-sm italic mb-3">
+                    {s.scientificName || 'N/A'}
+                  </p>
+                  <div className="flex justify-between text-xs">
+                    <div>
+                      <span className="text-gray-500">Phylum:</span>
+                      <span className="ml-1 font-medium">{s.phylum || 'Unknown'}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Class:</span>
+                      <span className="ml-1 font-medium">{s.class || 'Unknown'}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-20">

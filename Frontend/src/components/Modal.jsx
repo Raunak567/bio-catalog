@@ -99,23 +99,19 @@ export default function Modal({ show, onClose, species }) {
           <div className="mt-8 border-t border-gray-200 pt-6">
             <h4 className="text-lg font-semibold text-gray-800 mb-3">External Resources</h4>
             <div className="flex flex-wrap gap-3">
-              {[
-                { label: 'GBIF', link: species?.gbifLink },
-                { label: 'IUCN Red List', link: species?.iucnLink },
-                { label: 'NCBI', link: species?.ncbiLink },
-                { label: 'Wikipedia', link: species?.wikipediaLink },
-              ].map((res, idx) =>
-                res.link ? (
-                  <a
-                    key={idx}
-                    href={res.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg flex items-center"
-                  >
-                    <i className="fas fa-external-link-alt mr-2"></i> {res.label}
-                  </a>
-                ) : null
+              {[{ label: 'GBIF', link: species?.gbifLink }, { label: 'IUCN Red List', link: species?.iucnLink }, { label: 'NCBI', link: species?.ncbiLink }, { label: 'Wikipedia', link: species?.wikipediaLink }].map(
+                (res, idx) =>
+                  res.link ? (
+                    <a
+                      key={idx}
+                      href={res.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg flex items-center"
+                    >
+                      <i className="fas fa-external-link-alt mr-2"></i> {res.label}
+                    </a>
+                  ) : null
               )}
             </div>
           </div>

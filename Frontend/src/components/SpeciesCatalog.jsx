@@ -6,6 +6,9 @@ export default function SpeciesCatalog() {
   const [species, setSpecies] = useState([]);
   const [query, setQuery] = useState('cat');
 
+  // Function to force https for URLs
+  const cleanUrl = (url) => (url ? url.replace(/^http:\/\//i, 'https://') : '');
+
   useEffect(() => {
     const getSpecies = async () => {
       setLoading(true);
@@ -24,7 +27,7 @@ export default function SpeciesCatalog() {
               );
               const data = await res.json();
               if (data.results?.[0]?.media?.[0]?.identifier) {
-                s.fallbackImage = data.results[0].media[0].identifier;
+                s.fallbackImage = cleanUrl(data.results[0].media[0].identifier);
               }
             } catch (err) {
               console.error('Failed to fetch fallback image', err);
@@ -66,10 +69,11 @@ export default function SpeciesCatalog() {
       ) : species.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {species.map((s, index) => {
+            // Set the image URL with fallbacks
             const imageUrl =
-              s.images?.[0]?.url ||
+              cleanUrl(s.images?.[0]?.url) ||
               s.fallbackImage ||
-              '/images/species-fallback.jpg';
+              'https://via.placeholder.com/400x300?text=No+Image';
 
             return (
               <div
@@ -83,7 +87,7 @@ export default function SpeciesCatalog() {
                     alt={s.canonicalName || 'Species'}
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = '/images/species-fallback.jpg';
+                      e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
                     }}
                   />
                   <div className="absolute top-4 right-4 bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
